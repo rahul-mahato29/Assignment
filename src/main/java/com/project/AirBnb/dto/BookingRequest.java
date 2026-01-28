@@ -1,14 +1,15 @@
 package com.project.AirBnb.dto;
 
 import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Data
+@Value
 public class BookingRequest {
-    private Long hotelId;
-    private Long roomId;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
-    private Integer roomsCount;
+    Long hotelId;
+    Long roomId;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
+    Integer roomsCount;
 }

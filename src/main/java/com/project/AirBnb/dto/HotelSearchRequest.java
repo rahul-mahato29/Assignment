@@ -1,16 +1,15 @@
 package com.project.AirBnb.dto;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Data
+@Value
 public class HotelSearchRequest {
-    private String city;
-    private LocalDate startDate; //check-in time
-    private LocalDate endDate;   //check-out time
-    private Integer roomsCount;   //no-of-room user wants
-
-    private Integer page=0;
-    private Integer size=10;
+    String city;
+    LocalDate startDate; //check-in time
+    LocalDate endDate;   //check-out time
+    Integer roomsCount;   //no-of-room use
+    Integer page=0;
+    Integer size=10;
 }

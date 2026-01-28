@@ -1,16 +1,16 @@
 package com.project.AirBnb.dto;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Data
+@Value
 public class RoomDTO {
-    private Long id;
-    private String type;
-    private BigDecimal basePrice;
-    private String[] photos;
-    private String[] amenities;
-    private Integer totalCount;
-    private Integer capacity;
+    Long id;
+    String type;
+    BigDecimal basePrice;
+    String[] photos;
+    String[] amenities;
+    Integer totalCount;
+    Integer capacity;
 }

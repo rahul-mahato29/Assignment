@@ -1,13 +1,11 @@
 package com.project.AirBnb.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Value
 public class HotelInfoDTO {
-    private HotelDTO hotel;
-    private List<RoomDTO> rooms;
+    HotelDTO hotel;
+    List<RoomDTO> rooms;
 }

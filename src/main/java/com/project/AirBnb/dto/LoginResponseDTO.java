@@ -1,14 +1,10 @@
 package com.project.AirBnb.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 public class LoginResponseDTO {
-    private Long id;
-    private String accessToken;
-    private String refreshToken;
+    Long id;
+    String accessToken;
+    String refreshToken;
 }

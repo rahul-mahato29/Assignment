@@ -1,9 +1,9 @@
 package com.project.AirBnb.dto;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class LoginDTO {
-    private String email;
-    private String password;
+    String email;
+    String password;
 }

@@ -2,14 +2,14 @@ package com.project.AirBnb.dto;
 
 import com.project.AirBnb.entities.User;
 import com.project.AirBnb.entities.enums.Gender;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class GuestDTO {
 
-    private Long id;
-    private String name;
-    private Gender gender;
-    private Integer age;
-    private User user;
+    Long id;
+    String name;
+    Gender gender;
+    Integer age;
+    User user;
 }

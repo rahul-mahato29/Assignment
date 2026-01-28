@@ -34,9 +34,20 @@ public class HotelServiceImpl implements HotelService {
         log.info("Creating a new hotel with name : {}", hotelDTO.getName());
         Hotel hotel = modelMapper.map(hotelDTO, Hotel.class);
         hotel.setIsActive(false);    //initially
-        hotel = hotelRepository.save(hotel);
+        hotel = hotelRepository.save(hotel);    
         log.info("Created a new hotel with id : {}", hotelDTO.getId());
-        return modelMapper.map(hotel, HotelDTO.class);   //converting back to DTO, because we have to return DTO to user
+
+        //converting back to DTO, because we have to return DTO to user
+        return new HotelDTO(
+                hotel.getId(),
+                hotel.getName(),
+                hotel.getCity(),
+                hotel.getPhotos(),
+                hotel.getAmenities(),
+                hotel.getContactInfo(),
+                hotel.getOwner(),
+                hotel.getIsActive()
+        );
     }
 
     @Override
@@ -45,7 +56,16 @@ public class HotelServiceImpl implements HotelService {
         List<Hotel> hotels = hotelRepository.findAll();
         return hotels
                 .stream()
-                .map(hotel -> modelMapper.map(hotel, HotelDTO.class))
+                .map(hotel -> new HotelDTO(
+                        hotel.getId(),
+                        hotel.getName(),
+                        hotel.getCity(),
+                        hotel.getPhotos(),
+                        hotel.getAmenities(),
+                        hotel.getContactInfo(),
+                        hotel.getOwner(),
+                        hotel.getIsActive()
+                ))
                 .collect(Collectors.toList());
     }
 
