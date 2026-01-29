@@ -2,7 +2,6 @@ package com.project.AirBnb.controllers;
 
 import com.project.AirBnb.dto.HotelDTO;
 import com.project.AirBnb.services.HotelService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Data
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/hotels")
