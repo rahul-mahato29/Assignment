@@ -1,5 +1,6 @@
 package com.project.AirBnb.controllers;
 
+import com.project.AirBnb.exceptions.WebhookVerificationException;
 import com.project.AirBnb.services.BookingService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
@@ -27,7 +28,7 @@ public class WebhookController {
             return ResponseEntity.noContent().build();
         }
         catch (SignatureVerificationException e) {
-            throw new RuntimeException(e);
+            throw new WebhookVerificationException("Webhook signature verification failed: " + e.getMessage(), e);
         }
     }
 }

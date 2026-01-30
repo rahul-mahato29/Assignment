@@ -2,6 +2,7 @@ package com.project.AirBnb.services.Impl;
 
 import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.User;
+import com.project.AirBnb.exceptions.PaymentProcessingException;
 import com.project.AirBnb.repositories.BookingRepository;
 import com.project.AirBnb.services.CheckoutService;
 import com.stripe.exception.StripeException;
@@ -70,7 +71,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             return session.getUrl();
         }
         catch (StripeException e) {
-            throw new RuntimeException(e);
+            throw new PaymentProcessingException("Failed to create payment session for booking with ID : " + booking.getId(), e);
         }
     }
 }

@@ -5,8 +5,7 @@ import com.project.AirBnb.dto.BookingRequest;
 import com.project.AirBnb.dto.GuestDTO;
 import com.project.AirBnb.entities.*;
 import com.project.AirBnb.entities.enums.BookingStatus;
-import com.project.AirBnb.exceptions.ResourceNotFoundException;
-import com.project.AirBnb.exceptions.UnAuthorisedException;
+import com.project.AirBnb.exceptions.*;
 import com.project.AirBnb.repositories.*;
 import com.project.AirBnb.services.BookingService;
 import com.project.AirBnb.services.CheckoutService;
@@ -69,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
         long daysCount = ChronoUnit.DAYS.between(bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate())+1;
 
         if(inventoryList.size() != daysCount){
-            throw new IllegalStateException("Room is not available anymore");
+            throw new RoomUnavailableException("Room is not available anymore");
         }
 
         log.info("Checking : {}", bookingRequest.getRoomsCount());
@@ -113,12 +112,12 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if(hasBookingExpired(booking)) {
-            throw new IllegalStateException("Booking has already expired");
+            throw new BookingExpiredException("Booking has already expired");
         }
 
         //confirm booking state
         if(booking.getBookingStatus() != BookingStatus.RESERVED) {
-            throw new IllegalStateException("Booking is not under reserved state, cannot add guests");
+            throw new InvalidBookingStateException("Booking is not under reserved state, cannot add guests");
         }
 
         //add each guest into the booking
@@ -148,7 +147,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if(hasBookingExpired(booking)) {
-            throw new IllegalStateException("Booking has already expired");
+            throw new BookingExpiredException("Booking has already expired");
         }
 
         //in frontend, you have to make this frontend-success and failure url
@@ -200,7 +199,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if(booking.getBookingStatus() != BookingStatus.CONFIRMED) {
-            throw new IllegalStateException("Only Confirmed bookings can be cancelled");
+            throw new InvalidBookingStateException("Only Confirmed bookings can be cancelled");
         }
 
         booking.setBookingStatus(BookingStatus.CANCELLED);
@@ -220,7 +219,7 @@ public class BookingServiceImpl implements BookingService {
                     .build();
         }
         catch (StripeException e) {
-            throw new RuntimeException(e);
+            throw new PaymentProcessingException("Failed to process refund for booking with ID : " + booking.getId(), e);
         }
 
     }
