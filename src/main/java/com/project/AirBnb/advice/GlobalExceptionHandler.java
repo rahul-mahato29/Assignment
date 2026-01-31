@@ -1,5 +1,6 @@
 package com.project.AirBnb.advice;
 
+import com.project.AirBnb.exceptions.PaymentProcessingException;
 import com.project.AirBnb.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleResourceNotFound(ResourceNotFoundException exception){
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.NOT_FOUND)
+                .message(exception.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(PaymentProcessingException.class)
+    public ResponseEntity<ApiResponse<?>> handlePaymentProcessingError(PaymentProcessingException exception) {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(exception.getMessage())
                 .build();
         return buildErrorResponseEntity(apiError);

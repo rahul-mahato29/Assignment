@@ -163,7 +163,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public void capturePayments(Event event) {
         if("checkout.session.completed".equals(event.getType())) {
-            Session session = (Session) event.getDataObjectDeserializer().getObject().orElseThrow(() -> new IllegalStateException("Stripe session data not found in event"));
+            Session session = (Session) event.getDataObjectDeserializer().getObject().orElseThrow(() -> new PaymentProcessingException("Stripe session data not found in event"));
             if(session == null) return;
 
             String sessionId = session.getId();
