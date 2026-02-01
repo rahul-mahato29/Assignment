@@ -235,7 +235,7 @@ public class BookingServiceImpl implements BookingService {
 
     //added private method to check Transactional behaviour
     @Transactional
-    private Booking persistBooking(Booking booking) {
+    public Booking persistBooking(Booking booking) {
         return bookingRepository.save(booking);
     }
 }
