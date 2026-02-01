@@ -43,7 +43,12 @@ public class AuthService {
         toBeCreatedUser.setPassword(passwordEncoder.encode(toBeCreatedUser.getPassword()));
         User savedUser = userRepository.save(toBeCreatedUser);
 
-        return modelMapper.map(savedUser, UserDTO.class);
+        return new UserDTO(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail(),
+                savedUser.getRoles()
+        );
     }
 
     public LoginResponseDTO logIn(LoginDTO loginDTO) {

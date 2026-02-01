@@ -92,7 +92,8 @@ public class BookingServiceImpl implements BookingService {
                 .amount(totalPrice)
                 .build();
 
-        booking = bookingRepository.save(booking);
+//        booking = bookingRepository.save(booking);
+        booking = persistBooking(booking);
         return modelMapper.map(booking, BookingDTO.class);
     }
 
@@ -230,6 +231,12 @@ public class BookingServiceImpl implements BookingService {
 
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    //added private method to check Transactional behaviour
+    @Transactional
+    private Booking persistBooking(Booking booking) {
+        return bookingRepository.save(booking);
     }
 }
 

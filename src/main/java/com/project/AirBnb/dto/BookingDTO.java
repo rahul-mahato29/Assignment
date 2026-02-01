@@ -1,6 +1,7 @@
 package com.project.AirBnb.dto;
 
 import com.project.AirBnb.entities.enums.BookingStatus;
+import lombok.Data;
 import lombok.Value;
 
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Value
+@Data
 public class BookingDTO {
 
     Long id;

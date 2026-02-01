@@ -43,7 +43,15 @@ public class RoomServiceImpl implements RoomService {
             inventoryService.initializeRoomForAYear(room);
         }
 
-        return modelMapper.map(room, RoomDTO.class);
+        return new RoomDTO(
+                room.getId(),
+                room.getType(),
+                room.getBasePrice(),
+                room.getPhotos(),
+                room.getAmenities(),
+                room.getTotalCount(),
+                room.getCapacity()
+        );
     }
 
     @Override
@@ -52,7 +60,15 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository
                 .findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: "+roomId));
-        return modelMapper.map(room, RoomDTO.class);
+        return new RoomDTO(
+                room.getId(),
+                room.getType(),
+                room.getBasePrice(),
+                room.getPhotos(),
+                room.getAmenities(),
+                room.getTotalCount(),
+                room.getCapacity()
+        );
     }
 
     @Override
