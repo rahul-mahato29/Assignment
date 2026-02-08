@@ -3,6 +3,7 @@ package com.project.AirBnb.controllers;
 import com.project.AirBnb.dto.BookingDTO;
 import com.project.AirBnb.dto.BookingRequest;
 import com.project.AirBnb.dto.GuestDTO;
+import com.project.AirBnb.entities.enums.BookingStatus;
 import com.project.AirBnb.services.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +41,18 @@ public class HotelBookingController {
         bookingService.cancelBooking(bookingId);
         return ResponseEntity.noContent().build();
     }
+
+//    @PostMapping("/{bookingId}/demo/stale-risk")
+//    public ResponseEntity<String> demoStaleRisk(@PathVariable Long bookingId,
+//                                                @RequestParam(defaultValue = "CANCELLED") BookingStatus status) {
+//        bookingService.updateBookingStatusWithStaleRisk(bookingId, status);
+//        return ResponseEntity.ok("Stale-risk demo done. Check DB: amount should be OLD value.");
+//    }
+//
+//    @PostMapping("/{bookingId}/demo/stale-fixed")
+//    public ResponseEntity<String> demoStaleFixed(@PathVariable Long bookingId,
+//                                                 @RequestParam(defaultValue = "CANCELLED") BookingStatus status) {
+//        bookingService.updateBookingStatusStaleFixed(bookingId, status);
+//        return ResponseEntity.ok("Stale-fixed demo done. Check DB: amount should be OLD + 0.01.");
+//    }
 }

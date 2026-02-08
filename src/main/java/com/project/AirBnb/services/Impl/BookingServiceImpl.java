@@ -19,8 +19,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Propagation;
+//import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,6 +43,9 @@ public class BookingServiceImpl implements BookingService {
     private final ModelMapper modelMapper;
     private final CheckoutService checkoutService;
     private final PricingService pricingService;
+
+//    @Lazy
+//    private final BookingService self;
 
     @Value("${frontend.url}")
     private String frontendUrl;
@@ -92,8 +98,8 @@ public class BookingServiceImpl implements BookingService {
                 .amount(totalPrice)
                 .build();
 
-//        booking = bookingRepository.save(booking);
-        booking = persistBooking(booking);
+         booking = bookingRepository.save(booking);
+//        booking = persistBooking(booking);
         return modelMapper.map(booking, BookingDTO.class);
     }
 
@@ -233,10 +239,50 @@ public class BookingServiceImpl implements BookingService {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    //added private method to check Transactional behaviour
-    @Transactional
-    public Booking persistBooking(Booking booking) {
-        return bookingRepository.save(booking);
-    }
+//    @Transactional
+//    private Booking persistBooking(Booking booking) {
+//        return bookingRepository.save(booking);
+//    }
+
+
+    //This method commits in its own transaction
+//    @Override
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void updateBookingAmountInNewTransaction(Long bookingId) {
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id : " + bookingId));
+//        booking.setAmount(booking.getAmount().add(new BigDecimal("0.01")));
+//        bookingRepository.save(booking);
+//        log.info("Updated booking {} amount in new transaction : ", bookingId);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void updateBookingStatusWithStaleRisk(Long bookingId, BookingStatus newStatus) {
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id : " + bookingId));
+//
+//        // updates same row in a NEW transaction and commits
+//        self.updateBookingAmountInNewTransaction(bookingId);
+//
+//        // BUG: We still use the old reference (stale). Our save will overwrite the other writer's amount change.
+//        booking.setBookingStatus(newStatus);
+//        bookingRepository.save(booking);
+//        log.info("Updated booking {} status (stale risk)", bookingId);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void updateBookingStatusStaleFixed(Long bookingId, BookingStatus newStatus) {
+//        // Let the other writer run first (in its own transaction) and commit
+//        self.updateBookingAmountInNewTransaction(bookingId);
+//
+//        // FIX: Re-load the booking so we have current state, then update
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id : " + bookingId));
+//        booking.setBookingStatus(newStatus);
+//        bookingRepository.save(booking);
+//        log.info("Updated booking {} status (fixed - re-loaded after other writer)", bookingId);
+//    }
 }
 
