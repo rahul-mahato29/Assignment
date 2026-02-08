@@ -284,5 +284,15 @@ public class BookingServiceImpl implements BookingService {
 //        bookingRepository.save(booking);
 //        log.info("Updated booking {} status (fixed - re-loaded after other writer)", bookingId);
 //    }
+
+    @Transactional
+    public void demonstrateUnexpectedFlush(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id : " + bookingId));
+
+        booking.setBookingStatus(BookingStatus.CANCELLED);
+
+        bookingRepository.findAll();
+    }
 }
 

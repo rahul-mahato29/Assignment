@@ -55,4 +55,10 @@ public class HotelBookingController {
 //        bookingService.updateBookingStatusStaleFixed(bookingId, status);
 //        return ResponseEntity.ok("Stale-fixed demo done. Check DB: amount should be OLD + 0.01.");
 //    }
+
+    @PostMapping("/{bookingId}/flush")
+    public ResponseEntity<Void> demoUnexpectedFlush(@PathVariable Long bookingId) {
+        bookingService.demonstrateUnexpectedFlush(bookingId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -24,4 +24,6 @@ public interface BookingService {
 //    void updateBookingStatusWithStaleRisk(Long bookingId, BookingStatus newStatus);
 //
 //    void updateBookingStatusStaleFixed(Long bookingId, BookingStatus newStatus);
+
+    void demonstrateUnexpectedFlush(Long bookingId);
 }
