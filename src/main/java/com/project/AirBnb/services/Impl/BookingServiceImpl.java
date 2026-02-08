@@ -294,5 +294,21 @@ public class BookingServiceImpl implements BookingService {
 
         bookingRepository.findAll();
     }
+
+    @Override
+    @Transactional
+    public void updateBookingStatusOnly(Long bookingId, BookingStatus status) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id : " + bookingId));
+        booking.setBookingStatus(status);
+        bookingRepository.save(booking);
+        log.info("Updated booking {} status only (no query in this transaction)", bookingId);
+    }
+
+    @Override
+    @Transactional
+    public List<Booking> getAllBookingsForDemo() {
+        return bookingRepository.findAll();
+    }
 }
 

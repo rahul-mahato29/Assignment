@@ -3,6 +3,7 @@ package com.project.AirBnb.services;
 import com.project.AirBnb.dto.BookingDTO;
 import com.project.AirBnb.dto.BookingRequest;
 import com.project.AirBnb.dto.GuestDTO;
+import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.enums.BookingStatus;
 import com.stripe.model.Event;
 
@@ -26,4 +27,8 @@ public interface BookingService {
 //    void updateBookingStatusStaleFixed(Long bookingId, BookingStatus newStatus);
 
     void demonstrateUnexpectedFlush(Long bookingId);
+
+    void updateBookingStatusOnly(Long bookingId, BookingStatus status);
+
+    List<Booking> getAllBookingsForDemo();
 }

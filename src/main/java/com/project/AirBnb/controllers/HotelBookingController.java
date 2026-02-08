@@ -3,6 +3,7 @@ package com.project.AirBnb.controllers;
 import com.project.AirBnb.dto.BookingDTO;
 import com.project.AirBnb.dto.BookingRequest;
 import com.project.AirBnb.dto.GuestDTO;
+import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.enums.BookingStatus;
 import com.project.AirBnb.services.BookingService;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,18 @@ public class HotelBookingController {
     public ResponseEntity<Void> demoUnexpectedFlush(@PathVariable Long bookingId) {
         bookingService.demonstrateUnexpectedFlush(bookingId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{bookingId}/update-only")
+    public ResponseEntity<Void> demoUpdateOnly(@PathVariable Long bookingId,
+                                                              @RequestParam(defaultValue = "CANCELLED") BookingStatus status) {
+        bookingService.updateBookingStatusOnly(bookingId, status);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/demo/list")
+    public ResponseEntity<Map<String, String>> demoListOnly() {
+        List<Booking> list = bookingService.getAllBookingsForDemo();
+        return ResponseEntity.ok(Map.of("message", "List-only done. Check logs: only SELECT.", "count", String.valueOf(list.size())));
     }
 }
