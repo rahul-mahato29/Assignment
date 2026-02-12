@@ -36,4 +36,9 @@ public class HotelBrowseController {
     public ResponseEntity<List<HotelInfoDTO>> NPlusOne() {
         return ResponseEntity.ok(hotelService.getAllHotelInfoNPlusOne());
     }
+
+    @GetMapping("/nplus1/fetch-join")
+    public ResponseEntity<List<HotelInfoDTO>> NPlusOneFetchJoin() {
+        return ResponseEntity.ok(hotelService.getAllHotelInfoFetchJoin());
+    }
 }

@@ -170,4 +170,39 @@ public class HotelServiceImpl implements HotelService {
                 })
                 .toList();
     }
+
+    //fixing N+1 problem using fetch join
+    public List<HotelInfoDTO> getAllHotelInfoFetchJoin() {
+        List<Hotel> hotels = hotelRepository.findAllWithRooms();  // 1 query: hotels + rooms
+
+        return hotels.stream()
+                .map(hotel -> {
+                    // Now this does NOT trigger N+1, rooms are already fetched
+                    List<RoomDTO> rooms = hotel.getRoom().stream()
+                            .map(room -> new RoomDTO(
+                                    room.getId(),
+                                    room.getType(),
+                                    room.getBasePrice(),
+                                    room.getPhotos(),
+                                    room.getAmenities(),
+                                    room.getTotalCount(),
+                                    room.getCapacity()
+                            ))
+                            .toList();
+
+                    HotelDTO hotelDTO = new HotelDTO(
+                            hotel.getId(),
+                            hotel.getName(),
+                            hotel.getCity(),
+                            hotel.getPhotos(),
+                            hotel.getAmenities(),
+                            hotel.getContactInfo(),
+                            hotel.getOwner(),
+                            hotel.getIsActive()
+                    );
+
+                    return new HotelInfoDTO(hotelDTO, rooms);
+                })
+                .toList();
+    }
 }

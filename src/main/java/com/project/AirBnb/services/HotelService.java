@@ -21,4 +21,6 @@ public interface HotelService {
     HotelInfoDTO getHotelInfoById(Long hotelId);
 
     List<HotelInfoDTO> getAllHotelInfoNPlusOne();
+
+    List<HotelInfoDTO> getAllHotelInfoFetchJoin();
 }
