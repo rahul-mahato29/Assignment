@@ -19,4 +19,6 @@ public interface HotelService {
     void activateHotel(Long hotelId);
 
     HotelInfoDTO getHotelInfoById(Long hotelId);
+
+    List<HotelInfoDTO> getAllHotelInfoNPlusOne();
 }

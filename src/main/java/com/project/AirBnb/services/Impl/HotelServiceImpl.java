@@ -136,4 +136,38 @@ public class HotelServiceImpl implements HotelService {
 
         return new HotelInfoDTO(modelMapper.map(hotel, HotelDTO.class), rooms);
     }
+
+    public List<HotelInfoDTO> getAllHotelInfoNPlusOne() {
+        List<Hotel> hotels = hotelRepository.findAll();  // 1 query: load all hotels
+
+        return hotels.stream()
+                .map(hotel -> {
+                    // N+1: this access will trigger one query per hotel when rooms are LAZY
+                    List<RoomDTO> rooms = hotel.getRoom().stream()
+                            .map(room -> new RoomDTO(
+                                    room.getId(),
+                                    room.getType(),
+                                    room.getBasePrice(),
+                                    room.getPhotos(),
+                                    room.getAmenities(),
+                                    room.getTotalCount(),
+                                    room.getCapacity()
+                            ))
+                            .toList();
+
+                    HotelDTO hotelDTO = new HotelDTO(
+                            hotel.getId(),
+                            hotel.getName(),
+                            hotel.getCity(),
+                            hotel.getPhotos(),
+                            hotel.getAmenities(),
+                            hotel.getContactInfo(),
+                            hotel.getOwner(),
+                            hotel.getIsActive()
+                    );
+
+                    return new HotelInfoDTO(hotelDTO, rooms);
+                })
+                .toList();
+    }
 }
