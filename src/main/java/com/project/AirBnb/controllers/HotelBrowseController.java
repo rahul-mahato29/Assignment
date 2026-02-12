@@ -1,9 +1,6 @@
 package com.project.AirBnb.controllers;
 
-import com.project.AirBnb.dto.HotelDTO;
-import com.project.AirBnb.dto.HotelInfoDTO;
-import com.project.AirBnb.dto.HotelPriceDTO;
-import com.project.AirBnb.dto.HotelSearchRequest;
+import com.project.AirBnb.dto.*;
 import com.project.AirBnb.services.HotelService;
 import com.project.AirBnb.services.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +37,10 @@ public class HotelBrowseController {
     @GetMapping("/nplus1/fetch-join")
     public ResponseEntity<List<HotelInfoDTO>> NPlusOneFetchJoin() {
         return ResponseEntity.ok(hotelService.getAllHotelInfoFetchJoin());
+    }
+
+    @GetMapping("/projection/room-count")
+    public ResponseEntity<List<HotelWithRoomCountDTO>> demoProjectionRoomCount() {
+        return ResponseEntity.ok(hotelService.getHotelsWithRoomCount());
     }
 }

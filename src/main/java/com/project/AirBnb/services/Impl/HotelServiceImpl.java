@@ -2,6 +2,7 @@ package com.project.AirBnb.services.Impl;
 
 import com.project.AirBnb.dto.HotelDTO;
 import com.project.AirBnb.dto.HotelInfoDTO;
+import com.project.AirBnb.dto.HotelWithRoomCountDTO;
 import com.project.AirBnb.dto.RoomDTO;
 import com.project.AirBnb.entities.Hotel;
 import com.project.AirBnb.entities.Room;
@@ -204,5 +205,11 @@ public class HotelServiceImpl implements HotelService {
                     return new HotelInfoDTO(hotelDTO, rooms);
                 })
                 .toList();
+    }
+
+    //Projection
+    @Override
+    public List<HotelWithRoomCountDTO> getHotelsWithRoomCount() {
+        return hotelRepository.findHotelWithRoomCount();
     }
 }

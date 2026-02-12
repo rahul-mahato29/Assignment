@@ -2,6 +2,7 @@ package com.project.AirBnb.services;
 
 import com.project.AirBnb.dto.HotelDTO;
 import com.project.AirBnb.dto.HotelInfoDTO;
+import com.project.AirBnb.dto.HotelWithRoomCountDTO;
 
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface HotelService {
     List<HotelInfoDTO> getAllHotelInfoNPlusOne();
 
     List<HotelInfoDTO> getAllHotelInfoFetchJoin();
+
+    List<HotelWithRoomCountDTO> getHotelsWithRoomCount();
 }
