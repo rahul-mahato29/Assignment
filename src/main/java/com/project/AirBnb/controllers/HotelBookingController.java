@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,6 +85,15 @@ public class HotelBookingController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
         Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(bookingService.getBookingsPage(pageable));
+    }
+
+    @GetMapping("/paginated/stable")
+    public ResponseEntity<Page<BookingDTO>> getBookingsPaginatedStable(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by("createdAt").descending().and(Sort.by("id")));
         return ResponseEntity.ok(bookingService.getBookingsPage(pageable));
     }
 }
