@@ -6,6 +6,8 @@ import com.project.AirBnb.dto.GuestDTO;
 import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.enums.BookingStatus;
 import com.stripe.model.Event;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,4 +33,6 @@ public interface BookingService {
     void updateBookingStatusOnly(Long bookingId, BookingStatus status);
 
     List<Booking> getAllBookingsForDemo();
+
+    Page<BookingDTO> getBookingsPage(Pageable pageable);
 }

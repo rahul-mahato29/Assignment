@@ -7,6 +7,9 @@ import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.enums.BookingStatus;
 import com.project.AirBnb.services.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,5 +77,13 @@ public class HotelBookingController {
     public ResponseEntity<Map<String, String>> demoListOnly() {
         List<Booking> list = bookingService.getAllBookingsForDemo();
         return ResponseEntity.ok(Map.of("message", "List-only done. Check logs: only SELECT.", "count", String.valueOf(list.size())));
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<BookingDTO>> getBookingsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(bookingService.getBookingsPage(pageable));
     }
 }
