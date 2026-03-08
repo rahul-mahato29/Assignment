@@ -6,6 +6,7 @@ import com.project.AirBnb.dto.GuestDTO;
 import com.project.AirBnb.entities.Booking;
 import com.project.AirBnb.entities.enums.BookingStatus;
 import com.project.AirBnb.services.BookingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,7 @@ public class HotelBookingController {
     private final BookingService bookingService;
 
     @PostMapping("/init")
-    public ResponseEntity<BookingDTO> initialiseBooking(@RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<BookingDTO> initialiseBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return ResponseEntity.ok(bookingService.initialiseBooking(bookingRequest));
     }
 

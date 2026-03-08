@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 @Data
 @Table(
         name = "inventory",
+        indexes = {
+                @Index(name = "idx_inventory_room_date", columnList = "room_id, date")
+        },
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "unique_hotel_room_date",

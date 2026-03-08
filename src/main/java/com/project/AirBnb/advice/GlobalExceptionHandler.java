@@ -1,11 +1,14 @@
 package com.project.AirBnb.advice;
 
-import com.project.AirBnb.exceptions.PaymentProcessingException;
-import com.project.AirBnb.exceptions.ResourceNotFoundException;
+import com.project.AirBnb.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,6 +27,46 @@ public class GlobalExceptionHandler {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(exception.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(RoomUnavailableException.class)
+    public ResponseEntity<ApiResponse<?>> handleRoomUnavailable(RoomUnavailableException exception) {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.CONFLICT)
+                .message(exception.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(InvalidBookingRequestException.class)
+    public ResponseEntity<ApiResponse<?>> handleInvalidBookingRequest(InvalidBookingRequestException exception) {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(exception.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(UnAuthorisedException.class)
+    public ResponseEntity<ApiResponse<?>> handleUnauthorised(UnAuthorisedException exception) {
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(exception.getMessage())
+                .build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleValidationErrors(MethodArgumentNotValidException exception) {
+        List<String> subErrors = exception.getBindingResult().getFieldErrors().stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .collect(Collectors.toList());
+        ApiError apiError = ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Validation failed")
+                .subErrors(subErrors)
                 .build();
         return buildErrorResponseEntity(apiError);
     }

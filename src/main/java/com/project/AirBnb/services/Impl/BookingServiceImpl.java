@@ -24,8 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Propagation;
-//import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Propagation; 
+//import org.springframework.transaction.annotation.Transactional;   
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -58,6 +58,8 @@ public class BookingServiceImpl implements BookingService {
         log.info("Initialising booking for hotel : {}, room : {}, date : {} to {}",bookingRequest.getHotelId(),
                 bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate());
 
+        validateBookingRequestDates(bookingRequest);
+
         Hotel hotel = hotelRepository
                 .findById(bookingRequest.getHotelId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: "+bookingRequest.getHotelId()));
@@ -65,6 +67,9 @@ public class BookingServiceImpl implements BookingService {
         Room room = roomRepository
                 .findById(bookingRequest.getRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: "+bookingRequest.getRoomId()));
+
+        validateRoomBelongsToHotel(room, hotel);
+        validateRoomsCount(room, bookingRequest.getRoomsCount());
 
         List<Inventory> inventoryList = inventoryRepository.findAndLockAvailableInventory(
                 room.getId(),
@@ -76,6 +81,9 @@ public class BookingServiceImpl implements BookingService {
         long daysCount = ChronoUnit.DAYS.between(bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate())+1;
 
         if(inventoryList.size() != daysCount){
+            log.warn("Room unavailable: hotelId={}, roomId={}, checkIn={}, checkOut={}, expectedDays={}, gotInventory={}",
+                    bookingRequest.getHotelId(), bookingRequest.getRoomId(),
+                    bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate(), daysCount, inventoryList.size());
             throw new RoomUnavailableException("Room is not available anymore");
         }
 
@@ -237,8 +245,38 @@ public class BookingServiceImpl implements BookingService {
         return booking.getCreatedAt().plusMinutes(10).isBefore(LocalDateTime.now());
     }
 
+//    public User getCurrentUser() {
+//        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    }
+
+    private void validateBookingRequestDates(BookingRequest request) {
+        if (request.getCheckOutDate() == null || request.getCheckInDate() == null) {
+            return;
+        }
+        if (!request.getCheckOutDate().isAfter(request.getCheckInDate())) {
+            throw new InvalidBookingRequestException("Check-out date must be after check-in date");
+        }
+    }
+
+    private void validateRoomBelongsToHotel(Room room, Hotel hotel) {
+        if (room.getHotel() == null || !room.getHotel().getId().equals(hotel.getId())) {
+            throw new InvalidBookingRequestException("Room does not belong to the specified hotel");
+        }
+    }
+
+    private void validateRoomsCount(Room room, Integer roomsCount) {
+        if (roomsCount != null && room.getTotalCount() != null && roomsCount > room.getTotalCount()) {
+            throw new InvalidBookingRequestException(
+                    "Rooms count (" + roomsCount + ") exceeds room capacity (" + room.getTotalCount() + ")");
+        }
+    }
+
     public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getPrincipal() == null || !(auth.getPrincipal() instanceof User)) {
+            throw new UnAuthorisedException("Authentication required");
+        }
+        return (User) auth.getPrincipal();
     }
 
 //    @Transactional
